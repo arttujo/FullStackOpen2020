@@ -1,0 +1,18 @@
+title spa noten luominen
+
+note over selain
+käyttäjä kirjoittaa ja painaa lähetä.
+end note
+note over selain
+Selaimella oleva js tiedosto ajetaan ja se lisää
+uuden noten muiden joukkoon jonka jälkeen note 
+lähetetään palvelimelle
+end note 
+
+selain-palvelin HTTP POST httpsfullstack-exampleapp.herokuapp.comnew_note_spa
+palvelin--selain status code 201 Response {message note created}
+
+note over selain
+selaimella ei tapahdu enään mitään
+end note
+
