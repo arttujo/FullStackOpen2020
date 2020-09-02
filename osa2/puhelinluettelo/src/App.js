@@ -148,7 +148,7 @@ const App = () => {
           .catch((e) => {
             console.log(e);
             messageHandler(
-              `Person you tried to edit does not exist anymore`,
+              `${personObj.name} cannot be edited. Person doesn't exist anymore`,
               ERROR
             );
             refreshData();
