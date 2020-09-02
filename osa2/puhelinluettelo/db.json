@@ -1,59 +1,14 @@
 {
   "persons": [
     {
-      "name": "fsa",
-      "number": "1111",
-      "id": 7
-    },
-    {
-      "name": "wasdsa",
-      "number": "",
-      "id": 8
-    },
-    {
-      "name": "f22",
-      "number": "",
-      "id": 9
-    },
-    {
-      "name": "fsadsada",
-      "number": "211",
-      "id": 10
-    },
-    {
-      "name": "fgfdg",
-      "number": "fsgfdsg",
-      "id": 11
-    },
-    {
-      "name": "gfdgfds",
-      "number": "gsfdgfds",
-      "id": 12
-    },
-    {
       "name": "gfdsgdfsgdfsgdsf",
       "number": "gdfsgdfsg",
       "id": 13
     },
     {
-      "name": "321",
-      "number": "43421",
-      "id": 14
-    },
-    {
       "name": "hghd",
       "number": "yhgdhgf",
       "id": 15
-    },
-    {
-      "name": "2432432423",
-      "number": "43243",
-      "id": 16
-    },
-    {
-      "name": "43423",
-      "number": "fdsfdsdsff23423",
-      "id": 17
     }
   ]
 }
