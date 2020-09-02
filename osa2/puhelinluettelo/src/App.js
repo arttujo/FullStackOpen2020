@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from "react";
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import personService from "./services/persons";
 
 const FilteringForm = (props) => {
   const { handleSearchChange, search } = props;
@@ -38,18 +38,31 @@ const AddPersonForm = (props) => {
 };
 
 const PersonList = (props) => {
-    const {persons, search} = props
+  const { persons, search, deletePerson } = props;
 
   const personsToShow = persons
     ? persons.filter((person) => person.name.includes(search))
     : persons;
+
+  const deleteFromList= (person) =>{
+    const confirm = window.confirm(`Delete ${person.name}?`)
+    console.log('clicked on', person)
+    if (confirm) {
+      console.log('delete')
+      deletePerson(person)
+    
+    }else{
+      console.log('cancel')
+    }
+  }
 
   return (
     <div>
       <ul>
         {personsToShow.map((person) => (
           <li key={person.name}>
-            {person.name} {person.number}
+            {person.name} {person.number} 
+            <button onClick={()=>{deleteFromList(person)}}>delete</button>
           </li>
         ))}
       </ul>
@@ -62,17 +75,26 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
-
+  const { getAll, create, deletePers } = personService;
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(response =>{
-        console.log(response)
-        setPersons(response.data)
-      })
+    getAll().then((data) => {
+      console.log(data);
+      setPersons(data);
+    });
+  }, [getAll]);
 
-  }, [])
 
+  const deletePerson = (person) =>{
+    deletePers(person).then(response=>{
+      if (response.status===200){
+        getAll().then((data)=>{
+          setPersons(data)
+          console.log('fetched data after delete')
+        })
+      }
+    }) 
+  }
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -82,7 +104,11 @@ const App = () => {
     if (names.includes(newName)) {
       alert(`${newName} is already on the list!`);
     } else {
-      setPersons(persons.concat(personObj));
+      create(personObj).then((response) => {
+        console.log("create:");
+        console.log(response);
+        setPersons(persons.concat(response));
+      });
       setNewName("");
       setNewNumber("");
     }
@@ -115,7 +141,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       ></AddPersonForm>
       <h2>Numbers</h2>
-      <PersonList persons={persons} search={search}></PersonList>
+      <PersonList persons={persons} search={search} deletePerson={deletePerson}></PersonList>
     </div>
   );
 };
