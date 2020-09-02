@@ -135,20 +135,8 @@ const App = () => {
       });
   };
 
-  const addPerson = (event) => {
-    event.preventDefault();
-    const personObj = { name: newName, number: newNumber };
-    const match = persons.filter((person) => {
-      return person.name === newName;
-    });
-    console.log("match", match);
-    if (match.length > 0) {
-      const changeNumber = window.confirm(
-        `${newName} is already on the list. Want to update their number?`
-      );
-      if (changeNumber) {
-        console.log("change");
-        updatePers(match[0].id, personObj)
+  const updatePerson = (id,personObj) => {
+    updatePers(id, personObj)
           .then((response) => {
             console.log("update", response);
             messageHandler(
@@ -165,6 +153,22 @@ const App = () => {
             );
             refreshData();
           });
+  }
+
+  const addPerson = (event) => {
+    event.preventDefault();
+    const personObj = { name: newName, number: newNumber };
+    const match = persons.filter((person) => {
+      return person.name === newName;
+    });
+    console.log("match", match);
+    if (match.length > 0) {
+      const changeNumber = window.confirm(
+        `${newName} is already on the list. Want to update their number?`
+      );
+      if (changeNumber) {
+        console.log("change");
+        updatePerson(match[0].id,personObj)
       } else {
         console.log("cancel");
       }
