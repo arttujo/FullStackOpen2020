@@ -44,25 +44,30 @@ const PersonList = (props) => {
     ? persons.filter((person) => person.name.includes(search))
     : persons;
 
-  const deleteFromList= (person) =>{
-    const confirm = window.confirm(`Delete ${person.name}?`)
-    console.log('clicked on', person)
+  const deleteFromList = (person) => {
+    const confirm = window.confirm(`Delete ${person.name}?`);
+    console.log("clicked on", person);
     if (confirm) {
-      console.log('delete')
-      deletePerson(person)
-    
-    }else{
-      console.log('cancel')
+      console.log("delete");
+      deletePerson(person);
+    } else {
+      console.log("cancel");
     }
-  }
+  };
 
   return (
     <div>
       <ul>
         {personsToShow.map((person) => (
           <li key={person.name}>
-            {person.name} {person.number} 
-            <button onClick={()=>{deleteFromList(person)}}>delete</button>
+            {person.name} {person.number}
+            <button
+              onClick={() => {
+                deleteFromList(person);
+              }}
+            >
+              delete
+            </button>
           </li>
         ))}
       </ul>
@@ -75,7 +80,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
-  const { getAll, create, deletePers } = personService;
+  const { getAll, create, deletePers, updatePers } = personService;
 
   useEffect(() => {
     getAll().then((data) => {
@@ -84,25 +89,35 @@ const App = () => {
     });
   }, [getAll]);
 
-
-  const deletePerson = (person) =>{
-    deletePers(person).then(response=>{
-      if (response.status===200){
-        getAll().then((data)=>{
-          setPersons(data)
-          console.log('fetched data after delete')
-        })
+  const deletePerson = (person) => {
+    deletePers(person).then((response) => {
+      if (response.status === 200) {
+        getAll().then((data) => {
+          setPersons(data);
+          console.log("fetched data after delete");
+        });
       }
-    }) 
-  }
+    });
+  };
 
   const addPerson = (event) => {
     event.preventDefault();
     const personObj = { name: newName, number: newNumber };
-    let names = [];
-    persons.map((person) => names.push(person.name));
-    if (names.includes(newName)) {
-      alert(`${newName} is already on the list!`);
+    const match = persons.filter((person)=>{
+      return person.name === newName
+    })
+    console.log('match',match)
+    if (match.length>0) {
+      const changeNumber = window.confirm(`${newName} is already on the list. Want to update their number?`);
+      if (changeNumber){
+        console.log('change')
+        updatePers(match[0].id,personObj).then(response=>{
+          console.log('update',response)
+          getAll().then((data)=>{setPersons(data)})
+        })
+      } else{
+        console.log('cancel')
+      }
     } else {
       create(personObj).then((response) => {
         console.log("create:");
@@ -141,7 +156,11 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       ></AddPersonForm>
       <h2>Numbers</h2>
-      <PersonList persons={persons} search={search} deletePerson={deletePerson}></PersonList>
+      <PersonList
+        persons={persons}
+        search={search}
+        deletePerson={deletePerson}
+      ></PersonList>
     </div>
   );
 };
