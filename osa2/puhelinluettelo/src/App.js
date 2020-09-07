@@ -121,7 +121,7 @@ const App = () => {
   const deletePerson = (person) => {
     deletePers(person)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 204) {
           messageHandler(`${person.name} was deleted`, SUCCESS);
           refreshData();
         }
