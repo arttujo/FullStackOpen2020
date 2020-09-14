@@ -86,6 +86,18 @@ test("400 response if no title or url is present", async () => {
     .expect(400)
 });
 
+test("delete test, should have 1 less in Db", async () => {
+    const resposne = await api.delete(`/api/blogs/${helper.initialBlogs[0]._id}`).expect(204)
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+})
+
+test("like a blog", async ()=>{
+    const response = await api.put(`/api/blogs/${helper.initialBlogs[0]._id}`).send(helper.initialBlogs[0]).expect(202)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[0].likes).toBe(helper.initialBlogs[0].likes + 1)
+})
+
 afterAll(() => {
   mongoose.connection.close();
 });
