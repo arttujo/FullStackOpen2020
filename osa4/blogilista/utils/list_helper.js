@@ -58,7 +58,7 @@ const mostLikes = (blogs) => {
   _(blogs)
     .groupBy("author")
     .map((item, author) => {
-      logger.info("item", item);
+      //logger.info("item", item);
       logger.info("author", author);
       let likes = _.sumBy(item, "likes");
       logger.info("LIKES", likes);
