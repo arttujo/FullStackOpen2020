@@ -132,6 +132,7 @@ const App = () => {
           `${person.name} has already been removed from the phonebook!`,
           ERROR
         );
+        refreshData()
       });
   };
 
@@ -178,9 +179,12 @@ const App = () => {
         console.log(response);
         messageHandler(`${response.name} was added!`, SUCCESS);
         setPersons(persons.concat(response));
-      });
-      setNewName("");
+        setNewName("");
       setNewNumber("");
+      }).catch((e)=>{
+      messageHandler(e.response.data.error,ERROR)
+      })
+      
     }
   };
 
