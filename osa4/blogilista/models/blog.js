@@ -4,14 +4,6 @@ const logger  = require('../utils/logger')
 
 logger.info('Connecting to', config.MONGODB_URI)
 mongoose.set('useFindAndModify',false)
-mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => {
-    logger.info('Connected to MongoDB')
-  })
-  .catch((e) => {
-    logger.error("Error connecting to MongoDB",e.message)
-  })
 
 
   const blogSchema = mongoose.Schema({
