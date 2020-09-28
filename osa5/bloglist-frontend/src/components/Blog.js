@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 const ERROR = 'error'
 const SUCCESS = 'success'
-const Blog = ({ blog, messageHandler, refreshData }) => {
+const Blog = ({ blog, messageHandler, refreshData, likeBlog }) => {
   const [blogVisible, setBlogVisible] = useState(false)
   const hideWhenVisible = { display: blogVisible ? 'none' : '' }
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
@@ -15,19 +15,7 @@ const Blog = ({ blog, messageHandler, refreshData }) => {
     marginBottom: 5,
   }
 
-  const likeBlog = () => {
-    blogService
-      .likeBlog(blog)
-      .then((response) => {
-        console.log(response)
-        blog.likes++
-        messageHandler(`Liked: ${response.title}`, SUCCESS)
-      })
-      .catch((e) => {
-        console.log(e)
-        messageHandler(e, ERROR)
-      })
-  }
+
 
   const removeBlog = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -57,7 +45,7 @@ const Blog = ({ blog, messageHandler, refreshData }) => {
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
-        {blog.title + ' '}
+        {blog.title} {blog.author + ' '}
         <button onClick={() => setBlogVisible(true)}>Show</button>
       </div>
       <div style={showWhenVisible}>
@@ -69,7 +57,7 @@ const Blog = ({ blog, messageHandler, refreshData }) => {
         Likes: {blog.likes + ' '}
         <button
           onClick={() => {
-            likeBlog()
+            likeBlog(blog)
           }}
         >
           Like
