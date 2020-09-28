@@ -1,48 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import Login from "./components/Login";
 import BlogCreation from "./components/BlogCreation";
-import loginService from "./services/login";
+import Toggleable from "./components/Togglable";
 import Notification from "./components/Notification";
 import "./App.css";
-const ERROR = "error";
+
 const SUCCESS = "success";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState({});
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const blogFormRef = useRef();
   const messageHandler = (text, type) => {
     setMessage({ text: text, type: type });
     setTimeout(() => {
       setMessage(null);
     }, 5000);
-  };
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const user = await loginService.login({ username, password });
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
-      setUser(user);
-      blogService.setToken(user.token);
-      setUsername("");
-      setPassword("");
-      messageHandler(`Logged in as: ${user.name}`, SUCCESS);
-    } catch (e) {
-      messageHandler(`${e.response.data.error}`, ERROR)
-    }
   };
 
   const handleLogout = () => {
@@ -51,13 +27,12 @@ const App = () => {
     setUser(null);
   };
 
-  const refreshData = () =>{
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-
-  }
+  const refreshData = () => {
+    blogService.getAll().then((blogs) => setBlogs(blogs.sort((a,b)=>{return b.likes - a.likes})));
+  };
 
   useEffect(() => {
-    refreshData()
+    refreshData();
     setMessage(null);
   }, []);
 
@@ -73,13 +48,7 @@ const App = () => {
     return (
       <div>
         <Notification message={message}></Notification>
-        <Login
-          handlePasswordChange={handlePasswordChange}
-          handleUsernameChange={handleUsernameChange}
-          username={username}
-          password={password}
-          login={handleLogin}
-        ></Login>
+        <Login setUser={setUser} messageHandler={messageHandler}></Login>
       </div>
     );
   }
@@ -94,9 +63,16 @@ const App = () => {
           Logout
         </button>
       </p>
-      <BlogCreation messageHandler={messageHandler} refresh={refreshData}></BlogCreation>
+      <Toggleable buttonLabel="New Blog" ref={blogFormRef}>
+        <BlogCreation
+          messageHandler={messageHandler}
+          refresh={refreshData}
+          blogFormRef={blogFormRef}
+        ></BlogCreation>
+      </Toggleable>
+      <br></br>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} messageHandler={messageHandler} refreshData={refreshData}/>
       ))}
     </div>
   );

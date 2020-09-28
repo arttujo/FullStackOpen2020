@@ -5,10 +5,11 @@ const ERROR = "error";
 const SUCCESS = "success";
 
 const BlogCreation = (props) => {
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
-  const { messageHandler, refresh } = props;
+  const { messageHandler, refresh,blogFormRef } = props;
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -31,6 +32,7 @@ const BlogCreation = (props) => {
         author: author,
         url: url,
       };
+      blogFormRef.current.toggleVisibility()
       blogService
         .createBlog(newBlog)
         .then((response) => {
