@@ -1,39 +1,41 @@
-import React,{useState} from "react";
-import loginService from "../services/login";
-import blogService from "../services/blogs";
-const ERROR = "error";
-const SUCCESS = "success";
+import React,{ useState } from 'react'
+import loginService from '../services/login'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
+
+const ERROR = 'error'
+const SUCCESS = 'success'
 
 
 const Login = (props) => {
 
-    const {setUser, messageHandler} = props
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { setUser, messageHandler } = props
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  
+
   const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+    setUsername(event.target.value)
+  }
 
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
+    setPassword(event.target.value)
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const user = await loginService.login({ username, password });
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
-      setUser(user);
-      blogService.setToken(user.token);
-      setUsername("");
-      setPassword("");
-      messageHandler(`Logged in as: ${user.name}`, SUCCESS);
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      setUser(user)
+      blogService.setToken(user.token)
+      setUsername('')
+      setPassword('')
+      messageHandler(`Logged in as: ${user.name}`, SUCCESS)
     } catch (e) {
       messageHandler(`${e.response.data.error}`, ERROR)
     }
-  };
+  }
 
   return (
     <div>
@@ -62,7 +64,12 @@ const Login = (props) => {
         <input type="submit" value="Submit"></input>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+Login.propTypes = {
+  messageHandler: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired
+}
+
+export default Login
