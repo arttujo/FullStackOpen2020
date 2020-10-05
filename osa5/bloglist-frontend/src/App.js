@@ -77,6 +77,8 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+    } else {
+      setUser(null)
     }
   }, [])
 
@@ -95,7 +97,7 @@ const App = () => {
       <h2>Blogs</h2>
       <p>
         Logged in as {user.username} aka {user.name} <br></br>
-        <button name="Logout" value="Logout" onClick={handleLogout}>
+        <button name="Logout" value="Logout" id='logout-button'onClick={handleLogout}>
           Logout
         </button>
       </p>
@@ -105,9 +107,11 @@ const App = () => {
         ></BlogCreation>
       </Toggleable>
       <br></br>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} messageHandler={messageHandler} refreshData={refreshData} likeBlog={likeBlog}/>
-      ))}
+      <div id='blogs'>
+        {blogs.map((blog) => (
+          <Blog key={blog.id} blog={blog} messageHandler={messageHandler} refreshData={refreshData} likeBlog={likeBlog}/>
+        ))}
+      </div>
     </div>
   )
 }
